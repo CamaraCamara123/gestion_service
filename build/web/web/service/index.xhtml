@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Employees By Service and Chef</title>
+        <!-- Add this link in the <head> section of your HTML -->
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" integrity="sha512-siarrzI1u3pCqFG2LEzi87McrBmq6Tp7juVsdmGY1Dr8Saw+ZBAzDzrGwX3vgxX1NkioYNCFOVC0GpDPss10zQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </h:head>
+    <h:body>
+        <p:layout fullPage="true">
+
+            <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
+                <h:form>
+                    <p:panelGrid columns="4">
+                        <p:clock pattern="dd/MM/yyyy" />
+                        <p:clock pattern="hh:mm:ss" />
+                        <p:outputLabel value="Select Calendar"/>
+                        <p:calendar id="cal"  navigator="true" />
+                    </p:panelGrid>
+                </h:form>
+            </p:layoutUnit>
+
+<!--            <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
+                Footer
+            </p:layoutUnit>-->
+
+            <p:layoutUnit position="west" size="250" header="Menu" collapsible="true">
+                <ui:include src="/web/includs/menu.xhtml"/>
+            </p:layoutUnit>
+            
+           <p:layoutUnit position="center">
+               <h3 style="text-align: center">Détails des services</h3>
+               <p:tree style="width: 100%; padding:10px 20px"  value="#{serviceEmployeeManagedBean.root}"  var="node" styleClass="custom-tree" >
+                   <p:treeNode >
+                        <h:outputText value="#{node}" styleClass="tree-node-text" />
+                    </p:treeNode>
+                </p:tree>
+            </p:layoutUnit>
+
+
+
+        </p:layout>
+    </h:body>
+</html>
+

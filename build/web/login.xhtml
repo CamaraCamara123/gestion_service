@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Login Page</title>
+        <style>
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+            }
+            
+            .login-panel {
+                width: 300px; /* Adjust the width as needed */
+                background-color: #3498db; /* Blue background color */
+                padding: 20px; /* Add padding to create space between content and border */
+                border-radius: 8px; /* Optional: Add border-radius for rounded corners */
+                margin-top: 20px; /* Optional: Add margin to create space from the top */
+            }
+
+            .login-panel input,
+            .login-panel button {
+                margin-bottom: 10px; /* Add margin between input fields and button */
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <p:layout fullPage="true">
+            <h:form styleClass="login-panel">
+                <h:panelGrid columns="2">
+                    <h:outputLabel for="username">Username:</h:outputLabel>
+                    <h:inputText id="username" value="#{utilisateurBean.username}" required="true" />
+
+                    <h:outputLabel for="password">Password:</h:outputLabel>
+                    <h:inputSecret id="password" value="#{utilisateurBean.mdp}" required="true" />
+
+                    <h:panelGroup />
+                    <h:commandButton value="Login" action="#{utilisateurBean.login}" />
+
+                    <h:message for="username" />
+                    <h:message for="password" />
+                </h:panelGrid>
+            </h:form>
+        </p:layout>
+    </h:body>
+</html>
+
+

@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Rechercher</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+
+            <p:layout fullPage="true">
+
+                <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
+                    <h:form id ="form1">
+                        <p:panelGrid columns="4">
+                            <p:clock pattern="dd/MM/yyyy" />
+                            <p:clock pattern="hh:mm:ss" />
+                            <p:outputLabel value="Select Calendar"/>
+                            <p:calendar id="cal"  navigator="true" />
+                        </p:panelGrid>
+                    </h:form>
+                </p:layoutUnit>
+
+<!--                <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
+                    Footer
+                </p:layoutUnit>-->
+
+                <p:layoutUnit position="west" size="250" header="Menu" collapsible="true">
+                    <ui:include src="/web/includs/menu.xhtml"/>   
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <p:panel>
+                        <p:panelGrid columns="2">
+                            <p:panelGrid columns="1">
+                                <h:form id="form3">
+                                    <p:panel header="Rechercher par salle">
+                                        <p:panelGrid columns="2">
+                                            <p:outputLabel value="Salle"/>
+                                            <p:selectOneMenu value="#{salleBean.salle.id}" required="true" >
+                                                <f:selectItem itemLabel="Select One" itemValue=""/>
+                                                <f:selectItems value="#{salleBean.salles}" var="s"
+                                                               itemLabel="#{s.libelle}" itemValue="#{s.id}"/>
+                                                <p:ajax event="change" listener="#{salleBean.load()}" update=":form:tab"/>
+                                            </p:selectOneMenu>
+
+
+                                        </p:panelGrid>
+                                    </p:panel>
+                                </h:form>
+                                <h:form id="form">
+
+                                    <p:growl id="messages" showDetail="true"/>
+
+                                    <p:dataTable var="m" value="#{salleBean.machines}" id="tab" editable="true" paginator="true" rows="10" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15">
+
+                                        <f:facet name="header">
+                                            Liste des machines
+                                        </f:facet>
+
+                                        <p:ajax event="rowEdit" listener="#{machineBean.onEdit}" update=":form:messages" />
+                                        <p:ajax event="rowEditCancel" listener="#{machineBean.onCancel}" update=":form:messages" />
+
+                                        <p:column headerText="Marque" style="width:30%">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{m.marque}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{m.marque}" style="width:100%"/>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Reference" style="width:20%">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{m.reference}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{m.reference}" style="width:100%" label="Year"/>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Prix" style="width:20%">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{m.prix}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{m.prix}" style="width:100%" label="Year"/>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Date d'achat" style="width:20%">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <p:calendar value="#{m.dateAchat}" pattern="yyyy-MM-dd" disabled="true"/>
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:calendar value="#{m.dateAchat}" pattern="yyyy-MM-dd"/>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Salle" style="width:20%">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{m.salle.libelle}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:selectOneMenu value="#{m.salle.id}" required="true" style="width: 100px;">
+                                                        <f:selectItem itemLabel="#{m.salle.libelle}" itemValue="#{m.salle.id}"/>
+                                                        <f:selectItems value="#{salleBean.salles}" var="s"
+                                                                       itemLabel="#{s.libelle}" itemValue="#{s.id}"/>
+                                                    </p:selectOneMenu>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+
+                                    </p:dataTable>
+                                </h:form>
+                            </p:panelGrid>
+                            
+                            <p:panelGrid columns="1">
+                                <h:form id="f1">
+                                    <p:growl id="growl" showDetail="true" sticky="true"  life="1000"/>
+                                    <p:panel header="Rechercher par date">
+                                        <p:panelGrid columns="2" id="p1">
+                                            <p:outputLabel value="Date 1"/>
+                                            <p:calendar value="#{machineBean.date1}"/>
+                                            <p:outputLabel value="Date 2"/>
+                                            <p:calendar value="#{machineBean.date2}"/>
+                                        </p:panelGrid>
+                                        <p:commandButton value="Chercher" actionListener="#{machineBean.machineLoad()}" update=":form4:tab9"/>        
+
+                                    </p:panel>
+                                </h:form>
+                                <h:form id="form4">
+
+                                    <p:growl id="messages" showDetail="true"/>
+
+                                    <p:dataTable var="m" value="#{machineBean.machinesBetweenDates}" id="tab9" editable="true" paginator="true" rows="10" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15">
+
+                                        <f:facet name="header">
+                                            Liste des machines
+                                        </f:facet>
+
+                                        <p:ajax event="rowEdit" listener="#{machineBean.onEdit}" update=":form:messages" />
+                                        <p:ajax event="rowEditCancel" listener="#{machineBean.onCancel}" update=":form:messages" />
+
+                                        <p:column headerText="Marque" style="width:30%">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{m.marque}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{m.marque}" style="width:100%"/>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Reference" style="width:20%">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{m.reference}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{m.reference}" style="width:100%" label="Year"/>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Prix" style="width:20%">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{m.prix}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{m.prix}" style="width:100%" label="Year"/>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Date d'achat" style="width:20%">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <p:calendar value="#{m.dateAchat}" pattern="yyyy-MM-dd" disabled="true"/>
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:calendar value="#{m.dateAchat}" pattern="yyyy-MM-dd"/>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Salle" style="width:20%">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{m.salle.libelle}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:selectOneMenu value="#{m.salle.id}" required="true" style="width: 100px;">
+                                                        <f:selectItem itemLabel="#{m.salle.libelle}" itemValue="#{m.salle.id}"/>
+                                                        <f:selectItems value="#{salleBean.salles}" var="s"
+                                                                       itemLabel="#{s.libelle}" itemValue="#{s.id}"/>
+                                                    </p:selectOneMenu>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                    </p:dataTable>
+
+                                </h:form>
+                            </p:panelGrid>
+                        </p:panelGrid>
+                    </p:panel>    
+
+
+
+                </p:layoutUnit>
+
+            </p:layout>
+
+        </h:body>
+
+    </f:view>
+</html>

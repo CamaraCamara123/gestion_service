@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>PrimeFaces</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+
+            <p:layout fullPage="true">
+                <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
+                    <h:form>
+                        <p:panelGrid columns="4">
+                            <p:clock pattern="dd/MM/yyyy hh:ss:mm" />
+                            <p:clock pattern="hh:mm:ss" />
+                            <p:outputLabel value="Select Calendar"/>
+                            <p:calendar id="cal"  navigator="true" style="align: right;" />
+                        </p:panelGrid>
+                    </h:form>
+                </p:layoutUnit>
+<!--
+                <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
+                    Footer
+                </p:layoutUnit>-->
+
+                <p:layoutUnit position="west" size="250" header="Menu" collapsible="true">
+                    <ui:include src="/web/includs/menu.xhtml"/>   
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <h:form id="f1">
+                        <p:panel header="Gestion des Machines">
+                            <p:panelGrid columns="2" id="p1">
+                                <p:outputLabel value="Marque"/>
+                                <p:inputText value="#{machineBean.machine.marque}"/>
+                                <p:outputLabel value="Reference"/>
+                                <p:inputText value="#{machineBean.machine.reference}"/>
+                                <p:outputLabel value="Prix"/>
+                                <p:inputText value="#{machineBean.machine.prix}"/>
+                                <p:outputLabel value="Date"/>
+                                <p:calendar value="#{machineBean.machine.dateAchat}"/>
+                                <p:outputLabel value="Salle"/>
+                                <p:selectOneMenu value="#{machineBean.machine.salle.id}" required="true">
+                                    <f:selectItem itemLabel="Select One" itemValue=""/>
+                                    <f:selectItems value="#{salleBean.salles}" var="s"
+                                                   itemLabel="#{s.libelle}" itemValue="#{s.id}"/>
+                                </p:selectOneMenu>
+
+                            </p:panelGrid>
+                            <p:commandButton value="Ajouter" actionListener="#{machineBean.onCreateAction()}" update=":form:tab, f1:p1"/>
+                        </p:panel>
+                    </h:form>
+                    <h:form id="form">
+
+                        <p:growl id="messages" showDetail="true"/>
+
+                        <p:dataTable var="m" value="#{machineBean.machines}" id="tab" editable="true" paginator="true" rows="10" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15">
+
+                            <f:facet name="header">
+                                Liste des machines
+                            </f:facet>
+
+                            <p:ajax event="rowEdit" listener="#{machineBean.onEdit}" update=":form:messages" />
+                            <p:ajax event="rowEditCancel" listener="#{machineBean.onCancel}" update=":form:messages" />
+
+                            <p:column headerText="Marque" style="width:30%">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{m.marque}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText value="#{m.marque}" style="width:100%"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Reference" style="width:20%">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{m.reference}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText value="#{m.reference}" style="width:100%" label="Year"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Prix" style="width:20%">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{m.prix}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText value="#{m.prix}" style="width:100%" label="Year"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Date d'achat" style="width:20%">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <p:calendar value="#{m.dateAchat}" pattern="yyyy-MM-dd" disabled="true"/>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:calendar value="#{m.dateAchat}" pattern="yyyy-MM-dd"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Salle" style="width:20%">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{m.salle.libelle}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:selectOneMenu value="#{m.salle.id}" required="true" style="width: 100px;">
+                                            <f:selectItem itemLabel="#{m.salle.libelle}" itemValue="#{m.salle.id}"/>
+                                            <f:selectItems value="#{salleBean.salles}" var="s"
+                                                           itemLabel="#{s.libelle}" itemValue="#{s.id}"/>
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Modifier" style="width:20%">
+                                <p:rowEditor />
+                            </p:column>
+
+
+                            <p:column headerText="Supprimer" style="width:20%">
+                                <p:commandButton id="Supprimer" icon="ui-icon-trash"
+                                                 update=":form:confirmDialog" oncomplete="PF('confirmation').show();"
+                                                 title="Supprime">
+                                    <f:setPropertyActionListener target="#{machineBean.machine}"
+                                                                 value="#{m}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+
+
+
+                        <p:dialog id="confirmDialog" showEffect="fade"
+                                  header="Suppression d'une salle" 
+                                  widgetVar="confirmation">
+                            <h:panelGrid id="display" columns="2" cellpadding="4"
+                                     style="margin:0 auto;" />
+                            <h:inputHidden value="#{machineBean.machine.id}" id="supp"
+                                           required="true" />
+                            
+                            <p:outputLabel
+                                value="Etes vous sûr de vouloir supprimer cette machine ?" />
+                            <p:commandButton id="confirm" value="Oui"
+                                             update="messages,:form:tab" oncomplete="PF('confirmation').hide();location.reload();"
+                                             actionListener="#{machineBean.onDeleteAction()}" />
+                            <p:commandButton id="decline" value="Non"
+                                             onclick="PF('confirmation').hide()" type="button" />
+
+                        </p:dialog>
+                        </h:form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <!--                    <f:view>
+                                            <h:form id="f2">
+                                                <p:panel header="Liste des salles">
+                                                <p:dataTable id="tab" value="#{salleBean.salles}" var="item">
+                                                    <p:column>
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Id"/>
+                                                        </f:facet>
+                                                        <h:outputText value="#{item.id}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Code"/>
+                                                        </f:facet>
+                                                        <h:outputText value="#{item.code}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Libelle"/>
+                                                        </f:facet>
+                                                        <h:outputText value="#{item.libelle}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                                </p:panel>
+                                            </h:form>
+                                        </f:view>-->
+
+
+
+                </p:layoutUnit>
+
+            </p:layout>
+
+        </h:body>
+
+    </f:view>
+</html>
+
